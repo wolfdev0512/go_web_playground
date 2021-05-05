@@ -7,21 +7,26 @@ import (
 
 type fooHandler struct{}
 
-func (f *fooHandler) serveHTTP(w http.ResponseWriter, r *http.Request) {
+func (f *fooHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "Hello Foo")
 }
 
+func barHandler(rw http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(rw, "Hello Bar")
+}
+
 func main() {
+	mux := http.NewServeMux()
+
 	http.HandleFunc("/", func(rw http.ResponseWriter, r *http.Request) {
 		fmt.Println(r)
 		fmt.Fprint(rw, "Hello world")
 
 	})
 
-	http.HandleFunc("/bar", func(rw http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/bar", barHandler)
 
-		fmt.Fprint(rw, "Hello Bar")
+	http.Handle("/foo", &fooHandler{})
 
-	})
 	http.ListenAndServe(":3000", nil)
 }
