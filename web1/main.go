@@ -3,11 +3,20 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"time"
 )
+
+type User struct {
+	FirstName string
+	LastName  string
+	Email     string
+	CreatedAt time.Time
+}
 
 type fooHandler struct{}
 
 func (f *fooHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+
 	fmt.Fprint(w, "Hello Foo")
 }
 
