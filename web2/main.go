@@ -28,7 +28,7 @@ func (f *fooHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	user.CreatedAt = time.Now()
 
 	data, err := json.Marshal(user)
-
+	w.Header().Add("content-type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprint(w, string(data))
 
