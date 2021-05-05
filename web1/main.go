@@ -12,21 +12,23 @@ func (f *fooHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func barHandler(rw http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(rw, "Hello Bar")
+	name := r.URL.Query().Get("name")
+	if name == "" {
+		name = "World"
+	}
+	fmt.Fprint(rw, "Hello %s!", name)
 }
 
 func main() {
 	mux := http.NewServeMux()
 
-	http.HandleFunc("/", func(rw http.ResponseWriter, r *http.Request) {
-		fmt.Println(r)
+	mux.HandleFunc("/", func(rw http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(rw, "Hello world")
-
 	})
 
-	http.HandleFunc("/bar", barHandler)
+	mux.HandleFunc("/bar", barHandler)
 
-	http.Handle("/foo", &fooHandler{})
+	mux.Handle("/foo", &fooHandler{})
 
-	http.ListenAndServe(":3000", nil)
+	http.ListenAndServe(":3000", mux)
 }
